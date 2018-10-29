@@ -5,20 +5,20 @@ const axios = require('axios');
 var app = express();
 
 hbs.registerPartials(__dirname + "/views/partials");
-hbs.registerHelper("getCurrentYear", () => {
-    return new Date().getFullYear();
-});
-hbs.registerHelper("toUpper", (text) => {
-    return text.toUpperCase();
-})
+// hbs.registerHelper("getCurrentYear", () => {
+//     return new Date().getFullYear();
+// });
+// hbs.registerHelper("toUpper", (text) => {
+//     return text.toUpperCase();
+// })
 
 app.set("view engine", "hbs");
 app.use(express.static(__dirname + "/public"));
 
-app.use(function(req, resp, next){
-    console.log("Testing middleware");
-    next();
-})
+// app.use(function(req, resp, next){
+//     console.log("Testing middleware");
+//     next();
+// })
 
 app.get("/", (req, resp) => {
 

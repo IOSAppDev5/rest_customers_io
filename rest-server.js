@@ -60,7 +60,8 @@ app.post("/customers", (req, resp)=>{
     
     var customer = req.body;
     try {
-        if(customer.id <= 0){
+        var index = customers.findIndex((cust) => cust.id === req.body.id);
+        if(index !== -1){
             //Bad Request
             resp.status(400);
             resp.json(null);
@@ -83,11 +84,59 @@ app.post("/customers", (req, resp)=>{
     
 })
 
+app.put("/customers", function(req, resp){
+
+    console.log("Invoking /customers PUT request...." + req.body.id);
+    
+    var index = customers.findIndex((cust) => cust.id === req.body.id);
+
+    
+    if(index === -1){
+        resp.status(404);
+        resp.json(null);
+    }else{
+        
+        
+        console.log(index);
+        customers[index] = req.body;
+        allSockets.forEach(socket => {
+            socket.emit("updatedCustomer", req.body);
+        })
+        resp.status(200);
+        resp.json(null);
+    }
+
+    
+
+})
+
+// Customers DELETE
+app.delete("/customers/:id", function(req, resp){
+
+    console.log("Invoking /customers/" + req.params.id +  " DELETE request....");
+    var id = parseInt( req.params.id);
+    
+    var index = customers.findIndex((cust) => cust.id === id);
+  
+    if(index != -1){
+         customers.splice(index, 1);
+         allSockets.forEach(socket => {
+            socket.emit("deletedCustomer", index);
+        })
+         resp.json(null);
+    }else{
+        
+        resp.status(404);
+        resp.json(null);
+    }
+    
+})
+
 // app.listen(8090, () => {
 //     console.log("REST API server started");
 // });
 
-var port = process.env.PORT || 8090
+var port = process.env.PORT || 9000
 httpServer.listen(port, () => {
     console.log("REST API server started");
 });
