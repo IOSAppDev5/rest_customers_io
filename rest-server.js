@@ -30,6 +30,15 @@ initData();
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
+//enable Cross-Origin requests
+app.use(function(req, resp, next){
+
+    resp.setHeader("Access-Control-Allow-Origin", "*");
+    resp.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+    resp.setHeader("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers");
+    next();
+})
+
 
 app.get("/", (req, resp)=> {
     resp.status(200);
